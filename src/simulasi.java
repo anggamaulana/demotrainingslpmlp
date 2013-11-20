@@ -1,7 +1,14 @@
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JOptionPane;
+import model.Bobot;
+import model.HiddenNode;
+import model.InputNode;
+import model.OutputNode;
+import model.TargetNode;
 
 /*
  * To change this template, choose Tools | Templates
@@ -41,6 +48,18 @@ public class simulasi extends javax.swing.JFrame {
     public int maxLoop = 0;
     public int epoch = 1;
     public int i = 0;
+    
+    
+    public List<InputNode> inputnode;
+    public List<HiddenNode> hidden;
+    public List<OutputNode> output;
+    public List<Bobot> bobotHide;
+    public List<Bobot> bobotOut;
+    public List<TargetNode> targetnode;
+    public int[][] inputArray;
+    public int[][] targetArray;
+    public boolean status=false;
+    public int in=0;
 
      /**
      * @return the input
@@ -172,7 +191,7 @@ public class simulasi extends javax.swing.JFrame {
         txt_h1_xor = new javax.swing.JTextField();
         jLabel39 = new javax.swing.JLabel();
         txt_out_xor = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txt_target_xor = new javax.swing.JTextField();
         jLabel34 = new javax.swing.JLabel();
         txt_alpha_xor = new javax.swing.JTextField();
         jLabel35 = new javax.swing.JLabel();
@@ -191,7 +210,8 @@ public class simulasi extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel41 = new javax.swing.JLabel();
-        txt_error_xor1 = new javax.swing.JTextField();
+        txt_error_xor = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -401,6 +421,8 @@ public class simulasi extends javax.swing.JFrame {
 
         jLabel38.setText("X2");
 
+        txt_h2_xor.setEditable(false);
+        txt_h2_xor.setBackground(new java.awt.Color(255, 255, 255));
         txt_h2_xor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_h2_xorActionPerformed(evt);
@@ -409,6 +431,8 @@ public class simulasi extends javax.swing.JFrame {
 
         jLabel40.setText("V1");
 
+        txt_h1_xor.setEditable(false);
+        txt_h1_xor.setBackground(new java.awt.Color(255, 255, 255));
         txt_h1_xor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_h1_xorActionPerformed(evt);
@@ -417,15 +441,19 @@ public class simulasi extends javax.swing.JFrame {
 
         jLabel39.setText("V1");
 
+        txt_out_xor.setEditable(false);
+        txt_out_xor.setBackground(new java.awt.Color(255, 255, 255));
         txt_out_xor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_out_xorActionPerformed(evt);
             }
         });
 
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        txt_target_xor.setEditable(false);
+        txt_target_xor.setBackground(new java.awt.Color(255, 255, 255));
+        txt_target_xor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                txt_target_xorActionPerformed(evt);
             }
         });
 
@@ -434,6 +462,11 @@ public class simulasi extends javax.swing.JFrame {
         jLabel35.setText("treshold");
 
         jButton1.setText("TRAINING");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel12.setText("w11");
 
@@ -448,6 +481,11 @@ public class simulasi extends javax.swing.JFrame {
         jLabel17.setText("w32");
 
         jLabel41.setText("error");
+
+        txt_error_xor.setEditable(false);
+        txt_error_xor.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel18.setText("Target");
 
         javax.swing.GroupLayout backgroundxor1Layout = new javax.swing.GroupLayout(backgroundxor1);
         backgroundxor1.setLayout(backgroundxor1Layout);
@@ -502,7 +540,7 @@ public class simulasi extends javax.swing.JFrame {
                             .addComponent(txt_out_xor, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txt_th_xor, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(93, 93, 93)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_target_xor, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
                     .addGroup(backgroundxor1Layout.createSequentialGroup()
                         .addGroup(backgroundxor1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -519,19 +557,27 @@ public class simulasi extends javax.swing.JFrame {
                                 .addComponent(txt_h2_xor, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(2, 2, 2)
                         .addGroup(backgroundxor1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel35)
+                            .addGroup(backgroundxor1Layout.createSequentialGroup()
+                                .addComponent(jLabel35)
+                                .addGap(131, 131, 131))
                             .addGroup(backgroundxor1Layout.createSequentialGroup()
                                 .addGap(37, 37, 37)
                                 .addGroup(backgroundxor1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txt_w31_xor, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel16)
                                     .addComponent(jLabel17)
-                                    .addComponent(txt_w32_xor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(59, 59, 59)
-                        .addComponent(jLabel41)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_error_xor1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(131, 131, 131))))
+                                    .addComponent(txt_w32_xor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(backgroundxor1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(backgroundxor1Layout.createSequentialGroup()
+                                        .addGap(59, 59, 59)
+                                        .addComponent(jLabel41)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txt_error_xor, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(131, 131, 131))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundxor1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel18)
+                                        .addContainerGap())))))))
         );
         backgroundxor1Layout.setVerticalGroup(
             backgroundxor1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -577,14 +623,16 @@ public class simulasi extends javax.swing.JFrame {
                         .addGap(6, 6, 6)
                         .addComponent(txt_w32_xor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(backgroundxor1Layout.createSequentialGroup()
-                        .addGap(194, 194, 194)
+                        .addGap(167, 167, 167)
+                        .addComponent(jLabel18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(backgroundxor1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_target_xor, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txt_out_xor, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(backgroundxor1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel41)
-                            .addComponent(txt_error_xor1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txt_error_xor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGroup(backgroundxor1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(backgroundxor1Layout.createSequentialGroup()
                         .addComponent(txt_h2_xor, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -646,9 +694,9 @@ public class simulasi extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_out_xorActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void txt_target_xorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_target_xorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_txt_target_xorActionPerformed
 
     private void txt_x1_xorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_x1_xorActionPerformed
         // TODO add your handling code here:
@@ -691,6 +739,81 @@ public class simulasi extends javax.swing.JFrame {
     private void txt_x2w2_orActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_x2w2_orActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_x2w2_orActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.inputnode = new ArrayList<InputNode>();
+        inputnode.add(new InputNode(1));
+        inputnode.add(new InputNode(1));
+        
+         this.targetnode = new ArrayList<TargetNode>();
+        targetnode.add(new TargetNode(0));
+        
+        this.hidden = new ArrayList<HiddenNode>();
+        hidden.add(new HiddenNode(0, "Hidden 1"));
+        hidden.add(new HiddenNode(0, "Hidden 2"));
+        
+        this.output = new ArrayList<OutputNode>();
+        output.add(new OutputNode(0, "output 1"));
+        
+        for (int i = 0; i < output.size(); i++) {
+            output.get(i).setNodeTarget(targetnode.get(i));
+        }
+
+        this.bobotHide = new ArrayList<Bobot>();
+        int x = 0;
+        for (int i = 0; i < inputnode.size(); i++) {
+            for (int ii = 0; ii < hidden.size(); ii++) {
+                bobotHide.add(new Bobot("bobotHideArray[" + i + "] [" + ii + "]"));
+                bobotHide.get(x).setNodeInput(inputnode.get(i));
+                bobotHide.get(x).setNodeTarget(hidden.get(ii));
+                //menambahkan bobot input untuk hidden layer dari layer input
+                hidden.get(ii).addBobotIn(bobotHide.get(x));
+                x++;
+
+            }
+        }
+
+        this.bobotOut = new ArrayList<Bobot>();
+        x = 0;
+        for (int i = 0; i < hidden.size(); i++) {
+            for (int ii = 0; ii < output.size(); ii++) {
+                bobotOut.add(new Bobot("bobotOutArray[" + i + "] [" + ii + "]"));
+                bobotOut.get(x).setNodeInput(hidden.get(i));
+                bobotOut.get(x).setNodeTarget(output.get(ii));
+                //menambahkan bobotInput untuk output layer dari hiden layer
+                output.get(ii).addBobotIn(bobotOut.get(x));
+                //menambahkan output bobot pada hidden layer ke output layer
+                hidden.get(i).getBobotOut().add(bobotOut.get(x));
+                x++;
+            }
+        }
+        
+        this.bobotHide.get(0).setBobot(Double.parseDouble(txt_w11_xor.getText()));
+        this.bobotHide.get(1).setBobot(Double.parseDouble(txt_w12_xor.getText()));
+        this.bobotHide.get(2).setBobot(Double.parseDouble(txt_w21_xor.getText()));
+        this.bobotHide.get(3).setBobot(Double.parseDouble(txt_w22_xor.getText()));
+        
+        this.bobotOut.get(0).setBobot(Double.parseDouble(txt_w31_xor.getText()));
+        this.bobotOut.get(1).setBobot(Double.parseDouble(txt_w32_xor.getText()));
+        
+        this.inputArray=new int[4][2];
+        this.inputArray[0]=new int[]{1,1};
+        this.inputArray[1]=new int[]{1,0};
+        this.inputArray[2]=new int[]{0,1};
+        this.inputArray[3]=new int[]{0,0};
+        
+        this.targetArray=new int[4][1];
+        this.targetArray[0]=new int[]{0};
+        this.targetArray[1]=new int[]{1};
+        this.targetArray[2]=new int[]{1};
+        this.targetArray[3]=new int[]{0};
+        
+        new Timer().schedule(new Task2(this), 1000,20);
+        
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -708,6 +831,7 @@ public class simulasi extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel34;
@@ -724,32 +848,32 @@ public class simulasi extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField3;
     public javax.swing.JLabel lbl_epoch;
     private javax.swing.JButton training_or;
     private javax.swing.JTextField txt_alpha_or;
     private javax.swing.JTextField txt_alpha_xor;
     private javax.swing.JTextField txt_error_or;
-    private javax.swing.JTextField txt_error_xor1;
+    public javax.swing.JTextField txt_error_xor;
     private javax.swing.JTextField txt_f_or;
-    private javax.swing.JTextField txt_h1_xor;
-    private javax.swing.JTextField txt_h2_xor;
-    private javax.swing.JTextField txt_out_xor;
+    public javax.swing.JTextField txt_h1_xor;
+    public javax.swing.JTextField txt_h2_xor;
+    public javax.swing.JTextField txt_out_xor;
+    public javax.swing.JTextField txt_target_xor;
     private javax.swing.JTextField txt_th_or;
     private javax.swing.JTextField txt_th_xor;
-    private javax.swing.JTextField txt_w11_xor;
-    private javax.swing.JTextField txt_w12_xor;
+    public javax.swing.JTextField txt_w11_xor;
+    public javax.swing.JTextField txt_w12_xor;
     private javax.swing.JTextField txt_w1_or;
-    private javax.swing.JTextField txt_w21_xor;
-    private javax.swing.JTextField txt_w22_xor;
+    public javax.swing.JTextField txt_w21_xor;
+    public javax.swing.JTextField txt_w22_xor;
     private javax.swing.JTextField txt_w2_or;
-    private javax.swing.JTextField txt_w31_xor;
-    private javax.swing.JTextField txt_w32_xor;
+    public javax.swing.JTextField txt_w31_xor;
+    public javax.swing.JTextField txt_w32_xor;
     private javax.swing.JTextField txt_x1_or;
-    private javax.swing.JTextField txt_x1_xor;
+    public javax.swing.JTextField txt_x1_xor;
     private javax.swing.JTextField txt_x1w1_or;
     private javax.swing.JTextField txt_x2_or;
-    private javax.swing.JTextField txt_x2_xor;
+    public javax.swing.JTextField txt_x2_xor;
     private javax.swing.JTextField txt_x2w2_or;
     private javax.swing.JTextField txt_y_or;
     // End of variables declaration//GEN-END:variables
@@ -786,14 +910,14 @@ public class simulasi extends javax.swing.JFrame {
      * @return the jTextField3
      */
     public javax.swing.JTextField getjTextField3() {
-        return jTextField3;
+        return txt_target_xor;
     }
 
     /**
      * @param jTextField3 the jTextField3 to set
      */
     public void setjTextField3(javax.swing.JTextField jTextField3) {
-        this.jTextField3 = jTextField3;
+        this.txt_target_xor = jTextField3;
     }
 
     /**

@@ -16,7 +16,7 @@ public class OutputNode extends Node{
     }
     
     private static double getAmbang(){
-        return 0.01;
+        return 0.15;
     }
     
     private static double getRandom(double min, double max) {
